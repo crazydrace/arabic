@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <>
+    <div className="">
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -17,9 +17,9 @@ function App() {
           <Route path="/submit" element={<SubmitBlog />} />
           <Route path="/blog/:slug" element={<ArticlePage />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
-    </>
+    </div>
   );
 }
 

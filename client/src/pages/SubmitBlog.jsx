@@ -1,7 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SubmitBlog = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -11,6 +14,7 @@ const SubmitBlog = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ message: "", type: "" });
 
   const generateSlug = (text) =>
     text
@@ -24,6 +28,13 @@ const SubmitBlog = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification({ message: "", type: "" });
+    }, 4000);
   };
 
   const handleSubmit = async (e) => {
@@ -40,22 +51,23 @@ const SubmitBlog = () => {
         "http://localhost:5000/api/blogs",
         payload
       );
+
       if (response.status === 201) {
-        alert("✅ شكراً لتقديم مقالتك! سيتم مراجعتها ونشرها قريباً.");
-        setFormData({
-          title: "",
-          author: "",
-          email: "",
-          category: "",
-          content: "",
-        });
+        showNotification("✅ شكراً لتقديم مقالتك! تم نشرها بنجاح.", "success");
+        setTimeout(() => navigate("/blogs"), 2000);
       }
     } catch (err) {
       console.error(err);
       if (err.response?.status === 409) {
-        alert("⚠️ هناك مقالة بنفس العنوان منشورة بالفعل. يرجى تغيير العنوان.");
+        showNotification(
+          "⚠️ هناك مقالة بنفس العنوان منشورة بالفعل. يرجى تغيير العنوان.",
+          "error"
+        );
       } else {
-        alert("❌ حدث خطأ أثناء إرسال المقال. حاول مرة أخرى.");
+        showNotification(
+          "❌ حدث خطأ أثناء إرسال المقال. حاول مرة أخرى.",
+          "error"
+        );
       }
     } finally {
       setLoading(false);
@@ -70,6 +82,17 @@ const SubmitBlog = () => {
           شاركنا مقالتك المفيدة التي قد تفيد زملائك الطلاب
         </p>
       </div>
+
+      {/* Notification Banner */}
+      {notification.message && (
+        <div
+          className={`mb-6 px-4 py-3 rounded-lg text-white text-right ${
+            notification.type === "success" ? "bg-green-600" : "bg-red-500"
+          }`}
+        >
+          {notification.message}
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}
