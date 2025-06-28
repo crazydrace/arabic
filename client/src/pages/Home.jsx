@@ -154,14 +154,14 @@ const Home = () => {
             <p className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 text-xl">
               <strong className="text-green-800 text-xl">لسان الجزيرة </strong>{" "}
               هو الجناح العربي لـ{" "}
-              <strong className="text-green-800 text-xl">حيسان </strong>(بيت
-              الأنشطة الإسلامية الحكيمة في النهج الرشيد)، وهي{" "}
+              <strong className="text-green-800 text-xl">حسان </strong>(بيت
+              الأنشطة الإسلامية الحكيمة في النهج الرشاد)، وهي{" "}
               <strong className="text-green-800 text-xl">منظمة طلابية </strong>
               نشطة في{" "}
               <strong className="text-green-800 text-xl">
-                كلية النهج الرشيد الإسلامية{" "}
+                كلية النهج الرشاد الإسلامية{" "}
               </strong>
-              في شامّاكّالا، ثريسور، كيرلا. الكلية معتمدة من جامعة دار الهدى
+              في شامّاكّالا، تريشور، كيرلا. الكلية معتمدة من جامعة دار الهدى
               الإسلامية، وتشتهر بجمعها بين العلوم الإسلامية التقليدية والتعليم
               العصري
             </p>

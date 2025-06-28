@@ -21,11 +21,12 @@ const SubmitBlog = () => {
   const [notification, setNotification] = useState({ message: "", type: "" });
 
   const categories = [
+    "الكل",
     "التعليم",
-    "الصحة",
-    "ثقافة",
-    "تنمية بشرية",
-    "نفسية",
+    "الأشعار",
+    "قصص الأطفال",
+    "قصص قصيرة",
+    "المقالات",
     "أخرى",
   ];
 
@@ -43,7 +44,10 @@ const SubmitBlog = () => {
   }, []);
 
   const generateSlug = (text) =>
-    text.toLowerCase().replace(/[^\w]+/g, "-").replace(/(^-|-$)/g, "");
+    text
+      .toLowerCase()
+      .replace(/[^\w]+/g, "-")
+      .replace(/(^-|-$)/g, "");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,49 +65,48 @@ const SubmitBlog = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  const payload = {
-    ...formData,
-    slug: generateSlug(formData.title),
-  };
+    const payload = {
+      ...formData,
+      slug: generateSlug(formData.title),
+    };
 
-  try {
-    const response = await axios.post(
-      "http://localhost:5000/api/blogs",
-      payload
-    );
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/blogs",
+        payload
+      );
 
-    if (response.status === 201) {
-      showNotification("✅ تم إرسال المقال بنجاح!", "success");
-      // Delay navigation to allow user to read the message
-      setTimeout(() => {
+      if (response.status === 201) {
+        showNotification("✅ تم إرسال المقال بنجاح!", "success");
+        // Delay navigation to allow user to read the message
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/blogs");
+        }, 2000);
+      } else {
+        showNotification("❌ حدث خطأ غير متوقع أثناء الإرسال.", "error");
         setLoading(false);
-        navigate("/blogs");
-      }, 2000);
-    } else {
-      showNotification("❌ حدث خطأ غير متوقع أثناء الإرسال.", "error");
+      }
+    } catch (err) {
+      console.error(err);
       setLoading(false);
-    }
-  } catch (err) {
-    console.error(err);
-    setLoading(false);
 
-    if (err.response?.status === 409) {
-      showNotification(
-        "⚠️ هناك مقالة بنفس العنوان منشورة بالفعل. يرجى تغيير العنوان.",
-        "error"
-      );
-    } else {
-      showNotification(
-        "❌ حدث خطأ أثناء إرسال المقال. يرجى المحاولة مرة أخرى.",
-        "error"
-      );
+      if (err.response?.status === 409) {
+        showNotification(
+          "⚠️ هناك مقالة بنفس العنوان منشورة بالفعل. يرجى تغيير العنوان.",
+          "error"
+        );
+      } else {
+        showNotification(
+          "❌ حدث خطأ أثناء إرسال المقال. يرجى المحاولة مرة أخرى.",
+          "error"
+        );
+      }
     }
-  }
-};
-
+  };
 
   return (
     <motion.div
@@ -267,7 +270,10 @@ const SubmitBlog = () => {
 // Reusable Input Field Component
 const InputField = ({ label, name, value, onChange, placeholder, loading }) => (
   <div>
-    <label htmlFor={name} className="block text-lg font-medium text-gray-800 mb-3">
+    <label
+      htmlFor={name}
+      className="block text-lg font-medium text-gray-800 mb-3"
+    >
       {label}
     </label>
     <input
