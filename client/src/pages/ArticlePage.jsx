@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FiClock, FiUser, FiArrowLeft, FiBookOpen } from "react-icons/fi";
 import { FaRegNewspaper } from "react-icons/fa";
 
