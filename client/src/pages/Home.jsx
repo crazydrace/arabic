@@ -1,32 +1,23 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const Home = () => {
-  const featuredArticles = [
-    {
-      id: 1,
-      title: "نصائح للدراسة الفعالة",
-      excerpt: "تعرف على أفضل الطرق لتحقيق أقصى استفادة من وقت الدراسة",
-      category: "التعليم",
-      icon: "📚",
-    },
-    {
-      id: 2,
-      title: "كيفية إدارة الوقت للطلاب",
-      excerpt: "استراتيجيات عملية لتنظيم وقتك بين الدراسة والحياة الشخصية",
-      category: "تنمية بشرية",
-      icon: "⏳",
-    },
-    {
-      id: 3,
-      title: "أهمية القراءة في حياة الطالب",
-      excerpt: "كيف يمكن للقراءة أن توسع آفاقك وتطور مهاراتك الأكاديمية",
-      category: "ثقافة",
-      icon: "📖",
-    },
-  ];
+  const [blogs, setBlogs] = useState([]);
 
-  // Animation variants
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/blogs");
+        setBlogs(res.data);
+      } catch (err) {
+        console.error("Failed to fetch blogs:", err);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -88,7 +79,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Featured Articles */}
+      {/* Blog Previews */}
       <section className="mb-16">
         <motion.h2
           initial={{ opacity: 0, x: 20 }}
@@ -98,7 +89,7 @@ const Home = () => {
           className="text-3xl md:text-4xl font-bold text-green-800 mb-8 pb-3 inline-block relative"
         >
           <span className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-green-300 to-green-100 rounded-full"></span>
-          📝 مقالات مميزة
+          📝 أحدث المقالات
         </motion.h2>
 
         <motion.div
@@ -108,28 +99,27 @@ const Home = () => {
           viewport={{ once: true }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {featuredArticles.map((article) => (
+          {blogs.slice(0, 3).map((blog) => (
             <motion.div
-              key={article.id}
+              key={blog._id}
               variants={itemVariants}
               whileHover={{ y: -10 }}
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group"
             >
               <div className="p-6 h-full flex flex-col">
                 <div className="flex items-center mb-4">
-                  <span className="text-2xl mr-2">{article.icon}</span>
                   <span className="text-sm text-green-600 font-semibold bg-green-100 px-3 py-1 rounded-full">
-                    {article.category}
+                    {blog.category}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold mt-2 mb-3 text-gray-800 group-hover:text-green-700 transition-colors">
-                  {article.title}
+                  {blog.title}
                 </h3>
                 <p className="text-gray-600 mb-4 leading-relaxed flex-grow">
-                  {article.excerpt}
+                  {blog.content?.slice(0, 100)}...
                 </p>
                 <Link
-                  to={`/article/${article.id}`}
+                  to={`/blog/${blog.slug}`}
                   className="text-green-700 hover:text-green-900 font-semibold transition flex items-center justify-end group-hover:underline"
                 >
                   اقرأ المزيد

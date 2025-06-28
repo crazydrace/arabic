@@ -29,7 +29,6 @@ const SubmitBlog = () => {
     "أخرى",
   ];
 
-  // Fetch current user from Firebase Auth
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -44,10 +43,7 @@ const SubmitBlog = () => {
   }, []);
 
   const generateSlug = (text) =>
-    text
-      .toLowerCase()
-      .replace(/[^\w]+/g, "-")
-      .replace(/(^-|-$)/g, "");
+    text.toLowerCase().replace(/[^\w]+/g, "-").replace(/(^-|-$)/g, "");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,41 +61,49 @@ const SubmitBlog = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    const payload = {
-      ...formData,
-      slug: generateSlug(formData.title),
-    };
+  const payload = {
+    ...formData,
+    slug: generateSlug(formData.title),
+  };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/blogs",
-        payload
-      );
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/blogs",
+      payload
+    );
 
-      if (response.status === 201) {
-        showNotification("✅ شكراً لتقديم مقالتك! تم نشرها بنجاح.", "success");
-        setTimeout(() => navigate("/blogs"), 2000);
-      }
-    } catch (err) {
-      console.error(err);
-      if (err.response?.status === 409) {
-        showNotification(
-          "⚠️ هناك مقالة بنفس العنوان منشورة بالفعل. يرجى تغيير العنوان.",
-          "error"
-        );
-      } else {
-        showNotification(
-          "❌ حدث خطأ أثناء إرسال المقال. حاول مرة أخرى.",
-          "error"
-        );
-      }
-    } finally {
+    if (response.status === 201) {
+      showNotification("✅ تم إرسال المقال بنجاح!", "success");
+      // Delay navigation to allow user to read the message
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/blogs");
+      }, 2000);
+    } else {
+      showNotification("❌ حدث خطأ غير متوقع أثناء الإرسال.", "error");
       setLoading(false);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setLoading(false);
+
+    if (err.response?.status === 409) {
+      showNotification(
+        "⚠️ هناك مقالة بنفس العنوان منشورة بالفعل. يرجى تغيير العنوان.",
+        "error"
+      );
+    } else {
+      showNotification(
+        "❌ حدث خطأ أثناء إرسال المقال. يرجى المحاولة مرة أخرى.",
+        "error"
+      );
+    }
+  }
+};
+
 
   return (
     <motion.div
@@ -151,93 +155,67 @@ const SubmitBlog = () => {
         onSubmit={handleSubmit}
         className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
       >
-        <div className="p-8">
+        <div className="p-8 space-y-8">
           {/* Title */}
-          <div className="mb-8">
-            <label
-              htmlFor="title"
-              className="block text-lg font-medium text-gray-800 mb-3"
-            >
-              عنوان المقال *
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
-              placeholder="اكتب عنوان المقال هنا..."
-            />
-          </div>
+          <InputField
+            label="عنوان المقال *"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            loading={loading}
+            placeholder="اكتب عنوان المقال هنا..."
+          />
 
-          {/* Author (auto-filled) */}
-          <div className="mb-8">
-            <label
-              htmlFor="author"
-              className="block text-lg font-medium text-gray-800 mb-3"
-            >
-              اسم الكاتب *
-            </label>
-            <input
-              type="text"
-              id="author"
-              name="author"
-              value={formData.author}
-              onChange={handleChange}
-              required
-              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
-              placeholder="اسمك الكامل"
-            />
-          </div>
+          {/* Author */}
+          <InputField
+            label="اسم الكاتب *"
+            name="author"
+            value={formData.author}
+            onChange={handleChange}
+            loading={loading}
+            placeholder="اسمك الكامل"
+          />
 
           {/* Category */}
-          <div className="mb-8">
-            <label
-              htmlFor="category"
-              className="block text-lg font-medium text-gray-800 mb-3"
-            >
+          <div>
+            <label className="block text-lg font-medium text-gray-800 mb-3">
               التصنيف *
             </label>
             <select
-              id="category"
               name="category"
               value={formData.category}
               onChange={handleChange}
               required
+              disabled={loading}
               className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition bg-white"
             >
               <option value="">اختر تصنيف المقال</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Content */}
-          <div className="mb-8">
-            <label
-              htmlFor="content"
-              className="block text-lg font-medium text-gray-800 mb-3"
-            >
+          <div>
+            <label className="block text-lg font-medium text-gray-800 mb-3">
               محتوى المقال *
             </label>
             <textarea
-              id="content"
               name="content"
               value={formData.content}
               onChange={handleChange}
               required
+              disabled={loading}
               rows="12"
               className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
               placeholder="اكتب محتوى المقال هنا..."
             ></textarea>
           </div>
 
-          {/* Submit */}
+          {/* Submit Button */}
           <motion.button
             type="submit"
             disabled={loading}
@@ -285,5 +263,25 @@ const SubmitBlog = () => {
     </motion.div>
   );
 };
+
+// Reusable Input Field Component
+const InputField = ({ label, name, value, onChange, placeholder, loading }) => (
+  <div>
+    <label htmlFor={name} className="block text-lg font-medium text-gray-800 mb-3">
+      {label}
+    </label>
+    <input
+      type="text"
+      id={name}
+      name={name}
+      value={value}
+      onChange={onChange}
+      required
+      disabled={loading}
+      className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
+      placeholder={placeholder}
+    />
+  </div>
+);
 
 export default SubmitBlog;

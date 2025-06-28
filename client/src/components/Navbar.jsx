@@ -30,7 +30,7 @@ const Navbar = () => {
             className="text-2xl font-bold hover:text-green-200 transition-all duration-300"
           >
             <span className="inline-block hover:rotate-1 transition-transform duration-200">
-              مدونة الطالب
+              القرطاسية
             </span>
           </Link>
 
