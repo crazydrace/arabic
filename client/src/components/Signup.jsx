@@ -17,7 +17,7 @@ export default function Signup() {
   };
 
   return (
-    <form onSubmit={handleSignup}>
+    <form onSubmit={handleSignup} style={{ fontFamily: "tajawal, sans-serif" }}>
       <h2>Sign Up</h2>
       <input
         type="email"

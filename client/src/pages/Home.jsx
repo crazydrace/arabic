@@ -40,7 +40,10 @@ const Home = () => {
   };
 
   return (
-    <div className="text-right px-4 md:px-12 py-10 font-[sans-serif] bg-gradient-to-br from-green-50 via-white to-green-50 min-h-screen">
+    <div
+      className="text-right px-4 md:px-12 py-10 font-[sans-serif] bg-gradient-to-br from-green-50 via-white to-green-50 min-h-screen"
+      style={{ fontFamily: "tajawal, sans-serif" }}
+    >
       {/* Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: -20 }}
@@ -52,9 +55,9 @@ const Home = () => {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-green-400 rounded-full opacity-10"></div>
 
         <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-relaxed">
+          <h1 className="text-4xl  md:text-5xl lg:text-6xl  font-extrabold mb-6 leading-relaxed">
             مرحباً بكم في{" "}
-            <span className="text-green-700 bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+            <span className=" bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
               مدونة الطالب
             </span>
           </h1>
@@ -67,7 +70,7 @@ const Home = () => {
               to="/submit"
               className="inline-block bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700 text-white text-lg px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
             >
-              ✍️ شارك بمقالتك
+              شارك بمقالتك
             </Link>
             <Link
               to="/blogs"
@@ -145,21 +148,70 @@ const Home = () => {
         <div className="relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-6 pb-2 inline-block relative">
             <span className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-green-300 to-green-100 rounded-full"></span>
-            ℹ️ عن المدونة
+            ℹ️ من نحن
           </h2>
           <div className="space-y-6 text-lg text-gray-700 leading-loose">
-            <p className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-              <strong className="text-green-800">مدونة الطالب</strong> هي منصة
-              عربية تهدف إلى إثراء الطلاب بمحتوى هادف ومفيد في مجالات التعليم،
-              الثقافة، وتنمية الذات.
+            <p className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 text-xl">
+              <strong className="text-green-800 text-xl">لسان الجزيرة </strong>{" "}
+              هو الجناح العربي لـ{" "}
+              <strong className="text-green-800 text-xl">حيسان </strong>(بيت
+              الأنشطة الإسلامية الحكيمة في النهج الرشيد)، وهي{" "}
+              <strong className="text-green-800 text-xl">منظمة طلابية </strong>
+              نشطة في{" "}
+              <strong className="text-green-800 text-xl">
+                كلية النهج الرشيد الإسلامية{" "}
+              </strong>
+              في شامّاكّالا، ثريسور، كيرلا. الكلية معتمدة من جامعة دار الهدى
+              الإسلامية، وتشتهر بجمعها بين العلوم الإسلامية التقليدية والتعليم
+              العصري
             </p>
             <p>
-              نؤمن أن المعرفة يجب أن تكون متاحة ومبسطة، ونحرص على تقديم مقالات
-              ذات جودة عالية بأسلوب جذاب ومناسب للطلاب.
+              نُدشن{" "}
+              <strong className="text-bold text-xl">مدونة أدب الجزيرة </strong>{" "}
+              كمنصة لإبراز الإبداع الأدبي لطلابنا في{" "}
+              <strong className="text-bold text-xl">.لسان الجزيرة</strong>—
+              المكان الذي يلتقي فيه شغف اللغة العربية بالأدب، القصّة، الشعر،
+              والتاريخ الإسلامي.
             </p>
+
+            <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-6 pb-2 inline-block relative">
+              <span className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-r from-green-300 to-green-100 rounded-full"></span>
+              🎓 مهمتنا
+            </h2>
+            <div className="bg-cyan-50 p-4 rounded-lg flex-col border-l-4 border-blue-400 flex items-start">
+              <li className="text-xl">
+                <strong className="text-cyan-700 text-xl">
+                  تنمية الطلاقة في اللغة العربية
+                </strong>
+                ، لبناء متحدثين واثقين وأصيلين يتحدثون عن الإسلام بلغته ✨
+              </li>
+
+              <li className="text-xl">
+                <strong className="text-cyan-700">إبراز تراث الجزيرة</strong> من
+                لغة وأدب وعلوم إسلامية كلاسيكية• 📚
+              </li>
+              <li className="text-xl">
+                <strong className="text-cyan-700 text-xl">
+                  منبر للتعبير: نوفر مساحة لطلابنا لنشر قصائدهم، قصصهم، مقالاتهم
+                  في التاريخ والأدب.
+                </strong>
+              </li>
+              <li>
+                <strong className="text-cyan-700 text-xl">
+                  تشجيع الإبداع : ندعم الأصوات الناشئة، نعرض أعمالهم أمام
+                  زملائهم وأعضاء هيئة التدريس، ونحتفل بالإبداع الجامعي.
+                </strong>
+              </li>
+              <li className="text-xl">
+                <strong className="text-cyan-700 text-xl">
+                  تعزيز الثقافة : نربط جهودنا بتراث الأدب العربي الكلاسيكي
+                  والمعاصر، ونحيي الفصاحة والتأصيل.
+                </strong>
+              </li>
+            </div>
             <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400 flex items-start">
               <span className="text-2xl mr-3">💡</span>
-              <p>
+              <p className="text-lg">
                 هل لديك أفكار أو خبرات ترغب بمشاركتها؟ أرسل لنا مقالتك وساهم في
                 إلهام الآخرين!
               </p>

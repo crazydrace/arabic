@@ -50,7 +50,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       console.error("Logout error:", err);
     }
@@ -76,6 +76,7 @@ const Dashboard = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-b from-green-50 to-gray-50 py-8 px-4"
+      style={{ fontFamily: "tajawal, sans-serif" }}
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}

@@ -23,7 +23,7 @@ export default function Login() {
     setError("");
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       setError(getFriendlyError(err.code));
     } finally {
@@ -37,7 +37,7 @@ export default function Login() {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       setError(getFriendlyError(err.code));
     } finally {
@@ -70,6 +70,7 @@ export default function Login() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-gray-50 p-4"
+      style={{ fontFamily: "tajawal, sans-serif" }}
     >
       <div className="w-full max-w-md">
         <motion.div

@@ -33,38 +33,47 @@ const ArticlePage = () => {
     fetchArticle();
   }, [slug]);
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="w-16 h-16 border-t-4 border-green-600 border-opacity-80 rounded-full"
-      ></motion.div>
-    </div>
-  );
+  if (loading)
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ fontFamily: "tajawal, sans-serif" }}
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-t-4 border-green-600 border-opacity-80 rounded-full"
+        ></motion.div>
+      </div>
+    );
 
-  if (!article) return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
-      <motion.div
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="text-6xl mb-4"
-      >
-        😕
-      </motion.div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-2">المقال غير موجود</h2>
-      <p className="text-gray-600 mb-6">قد يكون المقال قد تم حذفه أو العنوان غير صحيح</p>
-      <Link 
-        to="/blogs" 
-        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md"
-      >
-        تصفح المقالات الأخرى
-      </Link>
-    </div>
-  );
+  if (!article)
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
+        <motion.div
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-6xl mb-4"
+        >
+          😕
+        </motion.div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          المقال غير موجود
+        </h2>
+        <p className="text-gray-600 mb-6">
+          قد يكون المقال قد تم حذفه أو العنوان غير صحيح
+        </p>
+        <Link
+          to="/blogs"
+          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md"
+        >
+          تصفح المقالات الأخرى
+        </Link>
+      </div>
+    );
 
   // Calculate reading time (200 words per minute)
-  const wordCount = article.content.split(' ').length;
+  const wordCount = article.content.split(" ").length;
   const readingTime = Math.ceil(wordCount / 200);
 
   return (
@@ -75,12 +84,9 @@ const ArticlePage = () => {
       className="text-right px-4 md:px-8 lg:px-12 py-8 max-w-6xl mx-auto"
     >
       {/* Back Button */}
-      <motion.div
-        whileHover={{ x: 5 }}
-        className="mb-6"
-      >
-        <Link 
-          to="/blogs" 
+      <motion.div whileHover={{ x: 5 }} className="mb-6">
+        <Link
+          to="/blogs"
           className="flex items-center text-green-600 hover:text-green-800 font-medium"
         >
           <FiArrowLeft className="ml-1" />
@@ -95,7 +101,7 @@ const ArticlePage = () => {
         transition={{ delay: 0.1 }}
         className="mb-10"
       >
-        <motion.span 
+        <motion.span
           whileHover={{ scale: 1.05 }}
           className="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium mb-4"
         >
@@ -111,7 +117,9 @@ const ArticlePage = () => {
           </div>
           <div className="flex items-center">
             <FiClock className="ml-1 text-green-600" />
-            <span>{new Date(article.createdAt).toLocaleDateString('ar-EG')}</span>
+            <span>
+              {new Date(article.createdAt).toLocaleDateString("ar-EG")}
+            </span>
           </div>
           <div className="flex items-center">
             <FiBookOpen className="ml-1 text-green-600" />
@@ -156,16 +164,16 @@ const ArticlePage = () => {
             كاتب مهتم بتقديم محتوى تعليمي وثقافي هادف للطلاب والمجتمع.
           </p>
           <div className="flex justify-center md:justify-start gap-4 mt-4">
-            <motion.a 
+            <motion.a
               whileHover={{ y: -3 }}
-              href="#" 
+              href="#"
               className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center hover:bg-green-700"
             >
               <span className="text-xs">ت</span>
             </motion.a>
-            <motion.a 
+            <motion.a
               whileHover={{ y: -3 }}
-              href="#" 
+              href="#"
               className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center hover:bg-green-700"
             >
               <span className="text-xs">ل</span>
@@ -201,7 +209,9 @@ const ArticlePage = () => {
                 <span className="text-xs px-3 py-1 bg-green-100 text-green-800 rounded-full">
                   {item.category}
                 </span>
-                <h4 className="font-bold text-lg my-3 text-gray-800">{item.title}</h4>
+                <h4 className="font-bold text-lg my-3 text-gray-800">
+                  {item.title}
+                </h4>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                   {item.content.substring(0, 100)}...
                 </p>
@@ -211,7 +221,7 @@ const ArticlePage = () => {
                     className="text-green-600 hover:text-green-800 font-medium flex items-center justify-end"
                   >
                     <span>اقرأ المزيد</span>
-                    <motion.span 
+                    <motion.span
                       animate={{ x: [0, 5, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                       className="mr-2"

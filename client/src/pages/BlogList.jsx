@@ -120,6 +120,7 @@ const BlogList = ({ userEmail }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="text-right px-4 md:px-8 lg:px-12 py-8 font-[sans-serif] bg-gradient-to-b from-green-50 to-white min-h-screen"
+      style={{ fontFamily: "tajawal, sans-serif" }}
     >
       {/* Hero */}
       <motion.div

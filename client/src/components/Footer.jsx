@@ -6,7 +6,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { title: "الرئيسية", url: "/" },
+    { title: "الرئيسية", url: "/home" },
     { title: "المقالات", url: "/blogs" },
     { title: "أضف مقالتك", url: "/submit" },
   ];
@@ -44,7 +44,7 @@ const Footer = () => {
             variants={itemVariants}
             className="text-center md:text-right"
           >
-            <Link to="/">
+            <Link to="/home">
               <motion.h3
                 whileHover={{ scale: 1.02 }}
                 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-green-100"
