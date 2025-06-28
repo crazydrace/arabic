@@ -1,9 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
-
 const blogRoutes = require("./routes/blogRoutes");
+// Debugging line to check the URI
 
 const app = express();
 const PORT = process.env.PORT || 5000;

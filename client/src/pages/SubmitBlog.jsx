@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FiUpload, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const SubmitBlog = () => {
   const navigate = useNavigate();
@@ -15,6 +19,29 @@ const SubmitBlog = () => {
 
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ message: "", type: "" });
+
+  const categories = [
+    "التعليم",
+    "الصحة",
+    "ثقافة",
+    "تنمية بشرية",
+    "نفسية",
+    "أخرى",
+  ];
+
+  // Fetch current user from Firebase Auth
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setFormData((prev) => ({
+          ...prev,
+          email: currentUser.email,
+          author: currentUser.displayName || currentUser.email.split("@")[0],
+        }));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const generateSlug = (text) =>
     text
@@ -34,7 +61,7 @@ const SubmitBlog = () => {
     setNotification({ message, type });
     setTimeout(() => {
       setNotification({ message: "", type: "" });
-    }, 4000);
+    }, 5000);
   };
 
   const handleSubmit = async (e) => {
@@ -75,52 +102,81 @@ const SubmitBlog = () => {
   };
 
   return (
-    <div className="text-right">
-      <div className="mb-8 bg-green-50 rounded-lg p-8">
-        <h1 className="text-3xl font-bold text-green-800 mb-2">أضف مقالتك</h1>
-        <p className="text-lg">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="text-right max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    >
+      {/* Header */}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+        className="mb-10 bg-gradient-to-r from-green-100 to-green-50 rounded-2xl p-8 shadow-lg border border-green-200"
+      >
+        <h1 className="text-3xl md:text-4xl font-bold text-green-800 mb-3">
+          أضف مقالتك
+        </h1>
+        <p className="text-lg text-green-700">
           شاركنا مقالتك المفيدة التي قد تفيد زملائك الطلاب
         </p>
-      </div>
+      </motion.div>
 
-      {/* Notification Banner */}
+      {/* Notification */}
       {notification.message && (
-        <div
-          className={`mb-6 px-4 py-3 rounded-lg text-white text-right ${
-            notification.type === "success" ? "bg-green-600" : "bg-red-500"
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`mb-8 px-6 py-4 rounded-xl shadow-md flex items-start ${
+            notification.type === "success"
+              ? "bg-green-100 border border-green-300 text-green-800"
+              : "bg-red-100 border border-red-300 text-red-800"
           }`}
         >
-          {notification.message}
-        </div>
+          {notification.type === "success" ? (
+            <FiCheckCircle className="text-xl mt-1 ml-2 text-green-600" />
+          ) : (
+            <FiAlertCircle className="text-xl mt-1 ml-2 text-red-600" />
+          )}
+          <span className="text-lg">{notification.message}</span>
+        </motion.div>
       )}
 
-      <form
+      {/* Form */}
+      <motion.form
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
         onSubmit={handleSubmit}
-        className="bg-white rounded-lg shadow-md p-8"
+        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
       >
-        <div className="mb-6">
-          <label
-            htmlFor="title"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            عنوان المقال *
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200"
-          />
-        </div>
+        <div className="p-8">
+          {/* Title */}
+          <div className="mb-8">
+            <label
+              htmlFor="title"
+              className="block text-lg font-medium text-gray-800 mb-3"
+            >
+              عنوان المقال *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
+              placeholder="اكتب عنوان المقال هنا..."
+            />
+          </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div>
+          {/* Author (auto-filled) */}
+          <div className="mb-8">
             <label
               htmlFor="author"
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-lg font-medium text-gray-800 mb-3"
             >
               اسم الكاتب *
             </label>
@@ -131,94 +187,102 @@ const SubmitBlog = () => {
               value={formData.author}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200"
+              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
+              placeholder="اسمك الكامل"
             />
           </div>
-          <div>
+
+          {/* Category */}
+          <div className="mb-8">
             <label
-              htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
+              htmlFor="category"
+              className="block text-lg font-medium text-gray-800 mb-3"
             >
-              البريد الإلكتروني *
+              التصنيف *
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200"
-            />
+              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition bg-white"
+            >
+              <option value="">اختر تصنيف المقال</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
 
-        <div className="mb-6">
-          <label
-            htmlFor="category"
-            className="block text-gray-700 font-medium mb-2"
+          {/* Content */}
+          <div className="mb-8">
+            <label
+              htmlFor="content"
+              className="block text-lg font-medium text-gray-800 mb-3"
+            >
+              محتوى المقال *
+            </label>
+            <textarea
+              id="content"
+              name="content"
+              value={formData.content}
+              onChange={handleChange}
+              required
+              rows="12"
+              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
+              placeholder="اكتب محتوى المقال هنا..."
+            ></textarea>
+          </div>
+
+          {/* Submit */}
+          <motion.button
+            type="submit"
+            disabled={loading}
+            whileHover={!loading ? { scale: 1.02 } : {}}
+            whileTap={!loading ? { scale: 0.98 } : {}}
+            className={`w-full py-4 px-6 rounded-xl font-medium text-lg transition-all flex items-center justify-center ${
+              loading
+                ? "bg-green-500 cursor-not-allowed"
+                : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg text-white"
+            }`}
           >
-            التصنيف *
-          </label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200"
-          >
-            <option value="">اختر تصنيف المقال</option>
-            <option value="التعليم">التعليم</option>
-            <option value="الصحة">الصحة</option>
-            <option value="ثقافة">ثقافة</option>
-            <option value="تنمية بشرية">تنمية بشرية</option>
-            <option value="نفسية">نفسية</option>
-            <option value="أخرى">أخرى</option>
-          </select>
+            {loading ? (
+              <span className="flex items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                جاري الإرسال...
+              </span>
+            ) : (
+              <span className="flex items-center">
+                <FiUpload className="ml-2" />
+                إرسال المقال
+              </span>
+            )}
+          </motion.button>
         </div>
-
-        <div className="mb-6">
-          <label
-            htmlFor="content"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            محتوى المقال *
-          </label>
-          <textarea
-            id="content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            required
-            rows="10"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200"
-          ></textarea>
-        </div>
-
-        <div className="flex items-center mb-4">
-          <input
-            type="checkbox"
-            id="agree"
-            required
-            className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 ml-2"
-          />
-          <label htmlFor="agree" className="text-gray-700">
-            أوافق على شروط النشر وسياسة الخصوصية
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full bg-green-600 text-white py-3 rounded-lg font-medium transition ${
-            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-green-700"
-          }`}
-        >
-          {loading ? "جاري الإرسال..." : "إرسال المقال"}
-        </button>
-      </form>
-    </div>
+      </motion.form>
+    </motion.div>
   );
 };
 

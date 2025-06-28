@@ -1,10 +1,19 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { auth } from "../firebase"; // Ensure the path is correct
+import { onAuthStateChanged } from "firebase/auth";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-  // Navigation items data
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const navItems = [
     { path: "/", label: "الرئيسية" },
     { path: "/blogs", label: "المقالات" },
@@ -47,9 +56,29 @@ const Navbar = () => {
                 </Link>
               )
             )}
+
+            {/* Auth (Desktop) */}
+            {!user ? (
+              <Link
+                to="/login"
+                className="px-4 py-2 bg-white text-green-700 hover:bg-gray-100 rounded-lg transition duration-300"
+              >
+                تسجيل الدخول
+              </Link>
+            ) : (
+              <Link
+                to="/dashboard"
+                title={user.displayName || user.email}
+                className="w-9 h-9 flex items-center justify-center bg-white text-green-700 font-bold rounded-full hover:bg-gray-100 transition"
+              >
+                {user.displayName
+                  ? user.displayName.charAt(0)
+                  : user.email.charAt(0)}
+              </Link>
+            )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle */}
           <button
             className="md:hidden text-xl p-2 rounded-md hover:bg-green-600 transition-all duration-300"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -76,6 +105,30 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
+
+            {/* Auth (Mobile) */}
+            {!user ? (
+              <Link
+                to="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-3 px-4 hover:bg-green-600 hover:pl-6 transition-all duration-300"
+              >
+                تسجيل الدخول
+              </Link>
+            ) : (
+              <Link
+                to="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-4 py-3 hover:bg-green-600 transition"
+              >
+                <div className="w-8 h-8 bg-white text-green-700 font-bold rounded-full flex items-center justify-center">
+                  {user.displayName
+                    ? user.displayName.charAt(0)
+                    : user.email.charAt(0)}
+                </div>
+                <p className="text-sm">{user.displayName || user.email}</p>
+              </Link>
+            )}
           </div>
         )}
       </div>
