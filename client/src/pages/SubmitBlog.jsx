@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FiUpload, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { slugify } from "transliteration";
 
 const SubmitBlog = () => {
   const navigate = useNavigate();
@@ -43,11 +44,15 @@ const SubmitBlog = () => {
     return () => unsubscribe();
   }, []);
 
-  const generateSlug = (text) =>
-    text
+  const generateSlug = (text) => {
+    const asciiSlug = slugify(text); // Converts Arabic to Latin
+    const finalSlug = asciiSlug
       .toLowerCase()
       .replace(/[^\w]+/g, "-")
       .replace(/(^-|-$)/g, "");
+
+    return finalSlug || `blog-${Date.now()}`; // Fallback if empty
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

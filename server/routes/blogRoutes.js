@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
+const { slugify } = require("transliteration");
 
 // ✅ Get blogs by user email
 router.get("/user", async (req, res) => {
@@ -30,6 +31,8 @@ router.get("/:slug", async (req, res) => {
   try {
     const blog = await Blog.findOne({ slug: req.params.slug });
     blog ? res.json(blog) : res.status(404).json({ error: "Blog not found" });
+    const blogs = await Blog.find().sort({ createdAt: -1 }); // make sure slug is in each item
+    res.json(blogs);
   } catch {
     res.status(500).json({ error: "Failed to fetch blog" });
   }
@@ -38,23 +41,29 @@ router.get("/:slug", async (req, res) => {
 // ✅ Submit a new blog
 router.post("/", async (req, res) => {
   const { title, author, content, email, category } = req.body;
+
   if (!title || !author || !content || !email || !category) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  const slug = title
+  // Slugify: Handles Arabic + Latin titles
+  let baseSlug = slugify(title)
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/[^\w]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  // Fallback for pure Arabic (slugify might return empty)
+  if (!baseSlug) baseSlug = `blog-${Date.now()}`;
+
+  // Ensure uniqueness
+  let slug = baseSlug;
+  let counter = 1;
+
+  while (await Blog.findOne({ slug })) {
+    slug = `${baseSlug}-${counter++}`;
+  }
 
   try {
-    const existing = await Blog.findOne({ slug });
-    if (existing) {
-      return res
-        .status(409)
-        .json({ error: "Blog with same title already exists" });
-    }
-
     const blog = new Blog({
       title,
       author,
@@ -65,12 +74,13 @@ router.post("/", async (req, res) => {
       likes: [],
       dislikes: [],
       views: 0,
-      viewers: [], // track who viewed
+      viewers: [],
     });
 
     await blog.save();
     res.status(201).json(blog);
-  } catch {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to post blog" });
   }
 });
