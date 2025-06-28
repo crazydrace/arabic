@@ -163,22 +163,6 @@ const ArticlePage = () => {
           <p className="text-gray-600 mt-2">
             كاتب مهتم بتقديم محتوى تعليمي وثقافي هادف للطلاب والمجتمع.
           </p>
-          <div className="flex justify-center md:justify-start gap-4 mt-4">
-            <motion.a
-              whileHover={{ y: -3 }}
-              href="#"
-              className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center hover:bg-green-700"
-            >
-              <span className="text-xs">ت</span>
-            </motion.a>
-            <motion.a
-              whileHover={{ y: -3 }}
-              href="#"
-              className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center hover:bg-green-700"
-            >
-              <span className="text-xs">ل</span>
-            </motion.a>
-          </div>
         </div>
       </motion.div>
 
