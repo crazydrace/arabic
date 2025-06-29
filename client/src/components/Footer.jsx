@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
-import { FaRegCopyright, FaHeart } from "react-icons/fa";
+import { FaRegCopyright, FaHome, FaBloggerB } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { TfiWrite } from "react-icons/tfi";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { title: "الرئيسية", url: "/home" },
-    { title: "المقالات", url: "/blogs" },
-    { title: "أضف مقالتك", url: "/submit" },
+    { title: "الرئيسية", url: "/home", icon: <FaHome /> },
+    { title: "المقالات", url: "/blogs", icon: <FaBloggerB /> },
+    { title: "أضف مقالتك", url: "/submit", icon: <TfiWrite /> },
   ];
 
   const containerVariants = {
@@ -49,7 +50,7 @@ const Footer = () => {
                 whileHover={{ scale: 1.02 }}
                 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-green-100"
               >
-                مدونة الطالب
+                القرطاسية
               </motion.h3>
             </Link>
             <p className="text-gray-300 text-lg leading-relaxed">
@@ -77,7 +78,7 @@ const Footer = () => {
                     to={link.url}
                     className="text-gray-300 hover:text-white transition duration-200 text-lg inline-flex items-center"
                   >
-                    <span className="ml-2">←</span>
+                    <span className="ml-2">{link.icon}</span>
                     {link.title}
                   </Link>
                 </motion.li>
@@ -96,7 +97,7 @@ const Footer = () => {
           <div className="flex flex-col items-center gap-2 text-sm text-gray-400">
             <div className="flex items-center justify-center gap-1 text-lg text-gray-300">
               <FaRegCopyright />
-              <span>{currentYear} جميع الحقوق محفوظة لمدونة الطالب</span>
+              <span>{currentYear} جميع الحقوق محفوظة القرطاسية</span>
             </div>
             <div className="flex items-center justify-center gap-1">
               <span>تم التطوير </span>

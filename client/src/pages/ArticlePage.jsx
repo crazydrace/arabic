@@ -17,7 +17,6 @@ const ArticlePage = () => {
         const res = await axios.get(`http://localhost:5000/api/blogs/${slug}`);
         setArticle(res.data);
 
-        // Fetch related articles by category, excluding current
         const relatedRes = await axios.get(
           `http://localhost:5000/api/blogs?category=${res.data.category}`
         );
@@ -35,10 +34,7 @@ const ArticlePage = () => {
 
   if (loading)
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ fontFamily: "tajawal, sans-serif" }}
-      >
+      <div className="min-h-screen flex items-center justify-center font-[tajawal,sans-serif]">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -72,7 +68,6 @@ const ArticlePage = () => {
       </div>
     );
 
-  // Calculate reading time (200 words per minute)
   const wordCount = article.content.split(" ").length;
   const readingTime = Math.ceil(wordCount / 200);
 
@@ -133,15 +128,24 @@ const ArticlePage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12 leading-relaxed prose max-w-none 
-                  prose-p:mb-6 prose-p:text-gray-700 prose-p:text-lg
-                  prose-h2:text-green-800 prose-h2:font-bold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-                  prose-h3:text-green-700 prose-h3:font-semibold prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-                  prose-ul:pr-6 prose-ul:list-disc prose-li:mb-2
-                  prose-blockquote:border-r-4 prose-blockquote:border-green-600 prose-blockquote:pr-4 prose-blockquote:bg-green-50 prose-blockquote:py-2
-                  prose-a:text-green-600 prose-a:hover:text-green-800 prose-a:underline"
+        className={`bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12 ${
+          article.category === "الأشعار"
+            ? "text-center space-y-4 font-[Amiri] text-xl text-gray-800 leading-loose"
+            : "leading-relaxed prose max-w-none prose-p:mb-6 prose-p:text-gray-700 prose-p:text-lg prose-h2:text-green-800 prose-h2:font-bold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-green-700 prose-h3:font-semibold prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-ul:pr-6 prose-ul:list-disc prose-li:mb-2 prose-blockquote:border-r-4 prose-blockquote:border-green-600 prose-blockquote:pr-4 prose-blockquote:bg-green-50 prose-blockquote:py-2 prose-a:text-green-600 prose-a:hover:text-green-800 prose-a:underline"
+        }`}
       >
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
+        {article.category === "الأشعار" ? (
+          article.content
+            .split("\n")
+            .filter((line) => line.trim() !== "")
+            .map((line, i) => (
+              <p key={i} className="whitespace-pre-line">
+                {line}
+              </p>
+            ))
+        ) : (
+          <div dangerouslySetInnerHTML={{ __html: article.content }} />
+        )}
       </motion.div>
 
       {/* Author Info */}

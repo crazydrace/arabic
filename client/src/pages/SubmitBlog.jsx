@@ -44,14 +44,24 @@ const SubmitBlog = () => {
     return () => unsubscribe();
   }, []);
 
+  // Autofill poem structure if empty and category is "الأشعار"
+  useEffect(() => {
+    if (formData.category === "الأشعار" && formData.content.trim() === "") {
+      setFormData((prev) => ({
+        ...prev,
+        content: "بيت ١:\n...\nبيت ٢:\n...\nبيت ٣:\n...",
+      }));
+    }
+  }, [formData.category]);
+
   const generateSlug = (text) => {
-    const asciiSlug = slugify(text); // Converts Arabic to Latin
+    const asciiSlug = slugify(text);
     const finalSlug = asciiSlug
       .toLowerCase()
       .replace(/[^\w]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-    return finalSlug || `blog-${Date.now()}`; // Fallback if empty
+    return finalSlug || `blog-${Date.now()}`;
   };
 
   const handleChange = (e) => {
@@ -86,7 +96,6 @@ const SubmitBlog = () => {
 
       if (response.status === 201) {
         showNotification("✅ تم إرسال المقال بنجاح!", "success");
-        // Delay navigation to allow user to read the message
         setTimeout(() => {
           setLoading(false);
           navigate("/blogs");
@@ -164,7 +173,6 @@ const SubmitBlog = () => {
         className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
       >
         <div className="p-8 space-y-8">
-          {/* Title */}
           <InputField
             label="عنوان المقال *"
             name="title"
@@ -174,7 +182,6 @@ const SubmitBlog = () => {
             placeholder="اكتب عنوان المقال هنا..."
           />
 
-          {/* Author */}
           <InputField
             label="اسم الكاتب *"
             name="author"
@@ -206,24 +213,36 @@ const SubmitBlog = () => {
             </select>
           </div>
 
-          {/* Content */}
+          {/* Content - Dynamic */}
           <div>
             <label className="block text-lg font-medium text-gray-800 mb-3">
-              محتوى المقال *
+              محتوى {formData.category === "الأشعار" ? "القصيدة" : "المقال"} *
             </label>
-            <textarea
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-              required
-              disabled={loading}
-              rows="12"
-              className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
-              placeholder="اكتب محتوى المقال هنا..."
-            ></textarea>
+            {formData.category === "الأشعار" ? (
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+                disabled={loading}
+                rows="12"
+                placeholder={`مثال:\nيا دارَ عبلةَ بالجَواءِ تَكَلَّمي\nوعمي صباحاً دارَ عبلةَ واسلمي\n...`}
+                className="w-full px-5 py-3 text-lg border border-green-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition font-[Amiri]"
+              />
+            ) : (
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                rows="12"
+                className="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
+                placeholder="اكتب محتوى المقال هنا..."
+              />
+            )}
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <motion.button
             type="submit"
             disabled={loading}
