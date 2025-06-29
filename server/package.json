@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "npx nodemon"
+    "start": "node server.js"
   },
   "dependencies": {
     "@auth/core": "^0.40.0",
