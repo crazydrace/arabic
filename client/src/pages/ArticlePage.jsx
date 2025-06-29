@@ -14,11 +14,13 @@ const ArticlePage = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/blogs/${slug}`);
+        const res = await axios.get(
+          `https://arabic-36zi.onrender.com/api/blogs/${slug}`
+        );
         setArticle(res.data);
 
         const relatedRes = await axios.get(
-          `http://localhost:5000/api/blogs?category=${res.data.category}`
+          `https://arabic-36zi.onrender.com/api/blogs?category=${res.data.category}`
         );
         const filteredRelated = relatedRes.data.filter((a) => a.slug !== slug);
         setRelated(filteredRelated.slice(0, 3));

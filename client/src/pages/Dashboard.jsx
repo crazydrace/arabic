@@ -45,7 +45,7 @@ const Dashboard = () => {
   const fetchUserBlogs = async (email) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/blogs/user?email=${email}`
+        `https://arabic-36zi.onrender.com/api/blogs/user?email=${email}`
       );
       const data = res.data;
       setBlogs(data);
@@ -84,7 +84,9 @@ const Dashboard = () => {
   const handleDeleteBlog = async (blogId) => {
     if (window.confirm("هل أنت متأكد من حذف هذه المقالة؟")) {
       try {
-        await axios.delete(`http://localhost:5000/api/blogs/${blogId}`);
+        await axios.delete(
+          `https://arabic-36zi.onrender.com/api/blogs/${blogId}`
+        );
         setBlogs(blogs.filter((blog) => blog._id !== blogId));
         fetchUserBlogs(user.email);
       } catch (err) {

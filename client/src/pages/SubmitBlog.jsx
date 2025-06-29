@@ -90,7 +90,7 @@ const SubmitBlog = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/blogs",
+        "https://arabic-36zi.onrender.com/api/blogs",
         payload
       );
 
